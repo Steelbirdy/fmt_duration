@@ -20,6 +20,8 @@ impl FmtDuration for core::time::Duration {
                 Token::Hours => buf = format!("{}{}", buf, self.as_secs() / (60 * 60)),
                 Token::Minutes => buf = format!("{}{:02}", buf, (self.as_secs() / 60) % 60),
                 Token::Seconds => buf = format!("{}{:02}", buf, self.as_secs() % 60),
+                Token::Millis => buf = format!("{}{:03}", buf, self.as_millis() % 1000),
+                Token::Micros => buf = format!("{}{:06}", buf, self.as_micros() % 1_000_000),
                 Token::Nanos => buf = format!("{}{:09}", buf, self.as_nanos() % 1_000_000_000),
             }
         }
@@ -43,9 +45,9 @@ mod tests {
         assert_eq!(2 + 2, 4);
     }
 
-    #[test_case(as_secs(11, 53, 20), 001203885, "%H:%M:%S.%N" => String::from("11:53:20.001203885"))]
-    #[test_case(as_secs(00, 00, 05), 000001000, "%H:%M:%S.%N" => String::from("0:00:05.000001000"))]
-    #[test_case(as_secs(1,  01, 01), 000000000, "%S/100%%"    => String::from("01/100%"))]
+    #[test_case(as_secs(11, 53, 20), 001203885, "%H:%M:%S.%NS" => String::from("11:53:20.001203885"))]
+    #[test_case(as_secs(00, 00, 05), 000001000, "%H:%M:%S.%US" => String::from("0:00:05.000001"))]
+    #[test_case(as_secs(1,  01, 01), 000000000, "%S.%MS/100%%" => String::from("01.000/100%"))]
     fn format_std_duration(secs: u64, nanos: u32, fmt_str: &str) -> String {
         StdDuration::format(&StdDuration::new(secs, nanos), fmt_str)
     }

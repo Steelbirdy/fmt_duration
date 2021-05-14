@@ -11,7 +11,13 @@ pub enum Token {
     #[token("%S")]
     Seconds,
 
-    #[token("%N")]
+    #[token("%MS")]
+    Millis,
+
+    #[token("%US")]
+    Micros,
+
+    #[token("%NS")]
     Nanos,
 
     #[token("%%")]
@@ -36,18 +42,20 @@ mod tests {
         Token::lexer(input).spanned().collect::<Vec<_>>()
     }
 
-    #[test_case("%H" => vec![(Hours,   0..2)] ; "Lex hours"          )]
-    #[test_case("%M" => vec![(Minutes, 0..2)] ; "Lex minutes"        )]
-    #[test_case("%S" => vec![(Seconds, 0..2)] ; "Lex seconds"        )]
-    #[test_case("%N" => vec![(Nanos,   0..2)] ; "Lex nanoseconds"    )]
-    #[test_case("%%" => vec![(Percent, 0..2)] ; "Lex escaped percent")]
+    #[test_case("%H"  => vec![(Hours,   0..2)] ; "Lex hours"          )]
+    #[test_case("%M"  => vec![(Minutes, 0..2)] ; "Lex minutes"        )]
+    #[test_case("%S"  => vec![(Seconds, 0..2)] ; "Lex seconds"        )]
+    #[test_case("%MS" => vec![(Millis,  0..3)] ; "Lex milliseconds"   )]
+    #[test_case("%US" => vec![(Micros,  0..3)] ; "Lex microseconds"   )]
+    #[test_case("%NS" => vec![(Nanos,   0..3)] ; "Lex nanoseconds"    )]
+    #[test_case("%%"  => vec![(Percent, 0..2)] ; "Lex escaped percent")]
     fn lex_tokens(input: &str) -> Vec<(Token, Range<usize>)> {
         get_spanned(input)
     }
 
     #[test]
     fn lex_hms_format() {
-        let input = "%H:%M:%S.%N";
+        let input = "%H:%M:%S.%MS";
 
         let expected = vec![
             (Hours, 0..2),
@@ -56,7 +64,7 @@ mod tests {
             (NoFormat, 5..6),
             (Seconds, 6..8),
             (NoFormat, 8..9),
-            (Nanos, 9..11),
+            (Millis, 9..12),
         ];
 
         assert_eq!(get_spanned(input), expected);
