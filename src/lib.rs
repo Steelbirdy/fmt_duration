@@ -1,3 +1,5 @@
+mod parsing;
+
 pub trait FmtDuration {}
 
 impl FmtDuration for core::time::Duration {}
