@@ -1,3 +1,8 @@
+pub trait FmtDuration {}
+
+impl FmtDuration for core::time::Duration {}
+impl FmtDuration for chrono::Duration {}
+
 #[cfg(test)]
 mod tests {
     #[test]
