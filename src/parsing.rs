@@ -60,19 +60,21 @@ mod tests {
         Token::lexer(input).spanned().collect::<Vec<_>>()
     }
 
-    #[test_case("%H"  => vec![(HoursPadded,     0..2)] ; "Lex padded hours"         )]
-    #[test_case("%M"  => vec![(MinutesPadded,   0..2)] ; "Lex padded minutes"       )]
-    #[test_case("%S"  => vec![(SecondsPadded,   0..2)] ; "Lex padded seconds"       )]
-    #[test_case("%MS" => vec![(MillisPadded,    0..3)] ; "Lex padded milliseconds"  )]
-    #[test_case("%US" => vec![(MicrosPadded,    0..3)] ; "Lex padded microseconds"  )]
-    #[test_case("%NS" => vec![(NanosPadded,     0..3)] ; "Lex padded nanoseconds"   )]
-    #[test_case("%h"  => vec![(HoursUnpadded,   0..2)] ; "Lex unpadded hours"       )]
-    #[test_case("%m"  => vec![(MinutesUnpadded, 0..2)] ; "Lex unpadded minutes"     )]
-    #[test_case("%s"  => vec![(SecondsUnpadded, 0..2)] ; "Lex unpadded seconds"     )]
-    #[test_case("%ms" => vec![(MillisUnpadded,  0..3)] ; "Lex unpadded milliseconds")]
-    #[test_case("%us" => vec![(MicrosUnpadded,  0..3)] ; "Lex unpadded microseconds")]
-    #[test_case("%ns" => vec![(NanosUnpadded,   0..3)] ; "Lex unpadded nanoseconds" )]
-    #[test_case("%%"  => vec![(Percent,         0..2)] ; "Lex escaped percent"      )]
+    #[test_case("%H"  => vec![(HoursPadded,     0..2)]         ; "Lex padded hours"         )]
+    #[test_case("%M"  => vec![(MinutesPadded,   0..2)]         ; "Lex padded minutes"       )]
+    #[test_case("%S"  => vec![(SecondsPadded,   0..2)]         ; "Lex padded seconds"       )]
+    #[test_case("%MS" => vec![(MillisPadded,    0..3)]         ; "Lex padded milliseconds"  )]
+    #[test_case("%US" => vec![(MicrosPadded,    0..3)]         ; "Lex padded microseconds"  )]
+    #[test_case("%NS" => vec![(NanosPadded,     0..3)]         ; "Lex padded nanoseconds"   )]
+    #[test_case("%h"  => vec![(HoursUnpadded,   0..2)]         ; "Lex unpadded hours"       )]
+    #[test_case("%m"  => vec![(MinutesUnpadded, 0..2)]         ; "Lex unpadded minutes"     )]
+    #[test_case("%s"  => vec![(SecondsUnpadded, 0..2)]         ; "Lex unpadded seconds"     )]
+    #[test_case("%ms" => vec![(MillisUnpadded,  0..3)]         ; "Lex unpadded milliseconds")]
+    #[test_case("%us" => vec![(MicrosUnpadded,  0..3)]         ; "Lex unpadded microseconds")]
+    #[test_case("%ns" => vec![(NanosUnpadded,   0..3)]         ; "Lex unpadded nanoseconds" )]
+    #[test_case("%%"  => vec![(Percent,         0..2)]         ; "Lex escaped percent"      )]
+    #[test_case("yee" => vec![(NoFormat,        0..3)]         ; "Lex non-format sequences" )]
+    #[test_case("%zz" => vec![(Error, 0..1), (NoFormat, 1..3)] ; "Lex invalid format specs" )]
     fn lex_tokens(input: &str) -> Vec<(Token, Range<usize>)> {
         get_spanned(input)
     }
